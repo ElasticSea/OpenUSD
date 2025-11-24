@@ -2,7 +2,7 @@
 project(UsdCs LANGUAGES CXX)
 
 # Path to your USD install root
-set(USD_ROOT "../../Usd-23.02-win64")
+set(USD_ROOT "../../Usd-20.08-win64")
 
 # Source files from Unity's UsdCs folder
 add_library(UsdCs SHARED
@@ -21,9 +21,11 @@ target_compile_definitions(UsdCs PRIVATE
 
 target_include_directories(UsdCs PRIVATE
     ${USD_ROOT}/include
-    ${USD_ROOT}/include/boost-1_78
+    ${USD_ROOT}/include/boost-1_70
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+target_compile_options(UsdCs PRIVATE /bigobj)
 
 target_link_directories(UsdCs PRIVATE
     ${USD_ROOT}/lib
@@ -31,16 +33,36 @@ target_link_directories(UsdCs PRIVATE
 
 # Start minimal; add more libs if you get unresolved symbols
 target_link_libraries(UsdCs PRIVATE
-    usd_ms
-    tf
-    vt
-    gf
-    sdf
+    ar
     arch
+    gf
+    js
+    kind
+    ndr
+    pcp
     plug
+    sdf
+    sdr
+    tf
+    trace
+    usd
     usdGeom
-    usdShade
+    usdHydra
     usdLux
+    usdMedia
+    usdRender
+    usdRi
+    usdShade
+    usdSkel
+    usdUI
     usdUtils
+    usdVol
+    vt
+    work
+
+    # threading
     tbb
+
+    # compression
+    zlib
 )
