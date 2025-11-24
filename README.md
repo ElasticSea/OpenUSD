@@ -1,3 +1,18 @@
+```powershell
+py -3.11 build_scripts\build_usd.py `
+    --build-shared `
+    --no-python `
+    --no-usdview `
+    --no-imaging `
+    --no-tests `
+    --no-examples `
+    --no-tutorials `
+    --no-docs `
+    ..\Usd-23.02-win64
+```
+
+
+
 Universal Scene Description
 ===========================
 
