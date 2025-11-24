@@ -910,7 +910,8 @@ BOOST = Dependency("boost", InstallBoost,
                    "include/boost/version.hpp",
                    "include/boost-1_70/boost/version.hpp",
                    "include/boost-1_78/boost/version.hpp")
-
+                   
+BOOST_VERSION_FILE = "include/boost/version.hpp"
 ############################################################
 # Intel TBB
 
