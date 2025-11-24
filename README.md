@@ -1,3 +1,11 @@
+```powershell
+py -3.7 build_scripts\build_usd.py --no-python --no-usdview --no-imaging --no-tests --no-examples --no-tutorials --no-docs ..\Usd-20.08-win64
+```
+
+win compile
+`cmake -S . -B build -G "Visual Studio 16 2019" -A x64`
+
+
 Universal Scene Description
 ===========================
 
