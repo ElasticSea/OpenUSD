@@ -616,23 +616,55 @@ ZLIB = Dependency("zlib", InstallZlib, "include/zlib.h")
         
 ############################################################
 # boost
+def get_or_download_archive(url, filename):
+    script_dir = os.path.dirname(__file__)
+    cache_dir = os.path.normpath(os.path.join(script_dir, "..", "local_cache"))
+    os.makedirs(cache_dir, exist_ok=True)
+
+    local_path = os.path.join(cache_dir, filename)
+    abs_path = os.path.abspath(local_path)
+
+    # If file exists, use file:// scheme
+    if os.path.exists(abs_path):
+        return "file:///" + abs_path.replace("\\", "/")
+
+    # else download once using python (DO NOT use curl)
+    print("Downloading:", url)
+    import urllib.request
+    with urllib.request.urlopen(url) as r, open(abs_path, "wb") as f:
+        f.write(r.read())
+
+    return "file:///" + abs_path.replace("\\", "/")
 
 if Linux() or MacOS():
     if Python3():
-        BOOST_URL = "https://downloads.sourceforge.net/project/boost/boost/1.70.0/boost_1_70_0.tar.gz"
+        boost_version = "1.70.0"
+        boost_filename = "boost_1_70_0.tar.gz"
+        boost_version_dir = "boost"
     else:
-        BOOST_URL = "https://downloads.sourceforge.net/project/boost/boost/1.61.0/boost_1_61_0.tar.gz"
-    BOOST_VERSION_FILE = "include/boost/version.hpp"
+        boost_version = "1.61.0"
+        boost_filename = "boost_1_61_0.tar.gz"
+        boost_version_dir = "boost"
 elif Windows():
-    # The default installation of boost on Windows puts headers in a versioned 
-    # subdirectory, which we have to account for here. In theory, specifying 
-    # "layout=system" would make the Windows install match Linux/MacOS, but that 
-    # causes problems for other dependencies that look for boost.
-    #
-    # boost 1.70 is required for Visual Studio 2019. For simplicity, we use
-    # this version for all older Visual Studio versions as well.
-    BOOST_URL = "https://downloads.sourceforge.net/project/boost/boost/1.70.0/boost_1_70_0.tar.gz"
-    BOOST_VERSION_FILE = "include/boost-1_70/boost/version.hpp"
+        # The default installation of boost on Windows puts headers in a versioned 
+        # subdirectory, which we have to account for here. In theory, specifying 
+        # "layout=system" would make the Windows install match Linux/MacOS, but that 
+        # causes problems for other dependencies that look for boost.
+    boost_version = "1.70.0"
+    boost_filename = "boost_1_70_0.tar.gz"
+    boost_version_dir = "boost-1_70"
+else:
+    raise RuntimeError("Unsupported platform")
+
+remote_boost_url = (
+    "https://downloads.sourceforge.net/project/boost/boost/"
+    f"{boost_version}/{boost_filename}"
+)
+
+# the one call you wanted
+BOOST_URL = get_or_download_archive(remote_boost_url, boost_filename)
+
+BOOST_VERSION_FILE = f"include/{boost_version_dir}/boost/version.hpp"
 
 def InstallBoost_Helper(context, force, buildArgs):
     # Documentation files in the boost archive can have exceptionally
@@ -1371,10 +1403,8 @@ def InstallUSD(context, force, buildArgs):
         else:
             extraArgs.append('-DPXR_ENABLE_PYTHON_SUPPORT=OFF')
 
-        if context.buildShared:
-            extraArgs.append('-DBUILD_SHARED_LIBS=ON')
-        elif context.buildMonolithic:
-            extraArgs.append('-DPXR_BUILD_MONOLITHIC=ON')
+        extraArgs.append('-DBUILD_SHARED_LIBS=OFF')
+        extraArgs.append('-DPXR_BUILD_MONOLITHIC=OFF')
 
         if context.buildDebug:
             extraArgs.append('-DTBB_USE_DEBUG_BUILD=ON')
