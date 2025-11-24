@@ -703,13 +703,13 @@ def InstallBoost_Helper(context, force, buildArgs):
     pyInfo = GetPythonInfo(context)
     pyVer = (int(pyInfo[3].split('.')[0]), int(pyInfo[3].split('.')[1]))
     if context.buildPython and pyVer >= (3, 10):
-        BOOST_URL = "https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.tar.gz"
+        BOOST_URL = "https://archives.boost.io/release/1.78.0/source/boost_1_78_0.tar.gz"
     elif IsVisualStudio2022OrGreater():
-        BOOST_URL = "https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.tar.gz"
+        BOOST_URL = "https://archives.boost.io/release/1.78.0/source/boost_1_78_0.tar.gz"
     elif MacOS():
-        BOOST_URL = "https://boostorg.jfrog.io/artifactory/main/release/1.78.0/source/boost_1_78_0.tar.gz"
+        BOOST_URL = "https://archives.boost.io/release/1.78.0/source/boost_1_78_0.tar.gz"
     else:
-        BOOST_URL = "https://boostorg.jfrog.io/artifactory/main/release/1.70.0/source/boost_1_70_0.tar.gz"
+        BOOST_URL = "https://archives.boost.io/release/1.70.0/source/boost_1_70_0.tar.gz"
 
     # Documentation files in the boost archive can have exceptionally
     # long paths. This can lead to errors when extracting boost on Windows,
@@ -910,7 +910,7 @@ BOOST = Dependency("boost", InstallBoost,
                    "include/boost/version.hpp",
                    "include/boost-1_70/boost/version.hpp",
                    "include/boost-1_78/boost/version.hpp")
-                   
+
 BOOST_VERSION_FILE = "include/boost/version.hpp"
 ############################################################
 # Intel TBB
